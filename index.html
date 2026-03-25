@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Hissein Kally | Architecte Digital · Fullstack · Réseaux · Université de Ngaoundéré</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --bg-dark: #030712;
+            --glass: rgba(17, 24, 39, 0.75);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f3f4f6;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.2s ease;
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: 0.1s;
+        }
+
+        /* Cyber Grid Background */
+        .cyber-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+        }
+
+        /* Glow Animations */
+        .orb {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: float 15s infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(5%, 5%) scale(1.2); }
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .glass-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .btn-elite {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .btn-elite::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.6s;
+            z-index: -1;
+        }
+
+        .btn-elite:hover::after {
+            left: 120%;
+        }
+
+        .badge-tech {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            font-family: 'Fira Code', monospace;
+            transition: all 0.2s;
+        }
+
+        .badge-tech:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: var(--primary);
+        }
+
+        .skill-bar {
+            height: 4px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+
+        @media (max-width: 1024px) {
+            #cursor, .cursor-dot { display: none; }
+            body { cursor: auto; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div class="cursor-dot"></div>
+    <div class="cyber-grid"></div>
+    
+    <div class="orb w-96 h-96 bg-blue-600 top-[-10%] left-[-5%]"></div>
+    <div class="orb w-[500px] h-[500px] bg-purple-600 bottom-[-10%] right-[-5%]"></div>
+    <div class="orb w-80 h-80 bg-cyan-500 top-[40%] left-[60%]"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 p-5 flex justify-between items-center backdrop-blur-xl bg-black/40 border-b border-white/10">
+        <div class="text-xl font-extrabold tracking-tighter">
+            <span class="text-blue-500">H</span>.<span class="text-purple-400">K</span> 
+            <span class="text-sm font-mono text-gray-400 ml-1">// ARCHITECT</span>
+            <span class="text-[9px] bg-blue-500/30 px-2 py-0.5 rounded-full border border-blue-500/50 ml-2 font-mono">ELITE v6.0</span>
+        </div>
+        <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wider text-gray-400">
+            <a href="#about" class="hover:text-white transition duration-300">À propos</a>
+            <a href="#skills" class="hover:text-white transition duration-300">Compétences</a>
+            <a href="#projects" class="hover:text-white transition duration-300">Projets</a>
+            <a href="#network" class="hover:text-white transition duration-300">Réseau</a>
+            <a href="#contact" class="hover:text-white transition duration-300">Contact</a>
+        </div>
+        <a href="#contact" class="btn-elite bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all">CONTACT</a>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 pt-36 pb-20">
+        <!-- Hero Section -->
+        <section class="grid lg:grid-cols-2 gap-12 items-center min-h-[70vh]">
+            <div data-aos="fade-right" data-aos-duration="1000">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-blue-500/40 bg-blue-500/10 text-blue-400 text-xs font-mono mb-6 tracking-wide">
+                    <i class="fas fa-map-marker-alt mr-1"></i> UNIVERSITÉ DE NGAOUNDÉRÉ · NIVEAU 3 INFORMATIQUE
+                </div>
+                <h1 class="text-6xl md:text-8xl font-black mb-6 leading-[1.1] tracking-tight">
+                    Hissein <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">Kally</span>
+                </h1>
+                <p class="text-gray-400 text-xl max-w-lg mb-6 leading-relaxed">
+                    <span class="text-white font-semibold">Fullstack Developer</span> · 
+                    <span class="text-white font-semibold">Ingénieur Réseaux</span> · 
+                    <span class="text-white font-semibold">Architecte Logiciel</span>
+                </p>
+                <p class="text-gray-500 max-w-md mb-8 leading-relaxed">
+                    Fusionner l'élégance du code avec la robustesse des infrastructures. 
+                    HTML/CSS/JS/PHP/SQL · Haskell · C/C++ · Administration systèmes & réseaux.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#projects" class="btn-elite bg-white text-black px-8 py-4 rounded-xl font-bold hover:scale-105 transition-all shadow-lg">Explorer mes projets</a>
+                    <a href="#contact" class="px-8 py-4 rounded-xl border border-white/20 font-bold hover:bg-white/5 transition-all backdrop-blur-sm">CV complet</a>
+                </div>
+                
+                <!-- Stats -->
+                <div class="flex gap-8 mt-12">
+                    <div><span class="text-2xl font-bold text-blue-400">12+</span><p class="text-xs text-gray-500">Projets livrés</p></div>
+                    <div><span class="text-2xl font-bold text-purple-400">6</span><p class="text-xs text-gray-500">Langages maîtrisés</p></div>
+                    <div><span class="text-2xl font-bold text-cyan-400">∞</span><p class="text-xs text-gray-500">Innovation continue</p></div>
+                </div>
+            </div>
+            
+            <div class="relative hidden lg:block" data-aos="zoom-in" data-aos-delay="200">
+                <div class="w-full aspect-square glass-card rounded-3xl flex items-center justify-center p-12 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20"></div>
+                    <div class="relative z-10 text-center">
+                        <i class="fas fa-code text-[12rem] text-blue-500/20"></i>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-40 h-40 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 blur-3xl opacity-30"></div>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-8 left-8 right-8 p-5 glass-card rounded-2xl">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-mono text-blue-400"><i class="fas fa-terminal mr-1"></i> status@hkally:~$</span>
+                            <div class="flex gap-1.5">
+                                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                            </div>
+                        </div>
+                        <p class="text-xs font-mono text-green-400">> uptime: 99.99% stable</p>
+                        <p class="text-xs font-mono text-gray-400">> stack: Fullstack_Elite + Network_Pro</p>
+                        <p class="text-xs font-mono text-blue-400">> location: Ngaoundéré, Cameroun</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24" data-aos="fade-up">
+            <div class="glass-card rounded-3xl p-8 md:p-12">
+                <div class="flex flex-wrap gap-8 justify-between">
+                    <div class="flex-1">
+                        <h2 class="text-3xl font-bold mb-4 flex items-center gap-3">
+                            <span class="h-1 w-10 bg-blue-500 rounded-full"></span> 
+                            À propos de moi
+                        </h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Je suis <span class="text-blue-400 font-semibold">Hissein Kally</span>, étudiant en 3ème année d'informatique à l'Université de Ngaoundéré. 
+                            Passionné par le développement web full-stack, la programmation système et les infrastructures réseaux. 
+                            J'ai eu l'opportunité de concevoir des projets complets allant de la gestion scolaire à des applications mobiles de réservation hôtelière.
+                        </p>
+                        <p class="text-gray-400 leading-relaxed">
+                            En parallèle, je maîtrise la maintenance des équipements bureautiques (imprimantes, scanners, plastifieuses) 
+                            et les outils comme Microsoft Suite, KoboToolbox et Sage Sari. Mon objectif : allier technique et innovation pour des solutions durables.
+                        </p>
+                    </div>
+                    <div class="flex flex-col gap-3 bg-black/30 p-6 rounded-2xl border-l-2 border-blue-500 min-w-[200px]">
+                        <p class="italic text-gray-300 text-sm"><i class="fas fa-quote-left text-blue-400 mr-2"></i> Le code est mon langage, les réseaux mon terrain de jeu.</p>
+                        <p class="text-xs text-blue-400 font-mono mt-2">— Hissein Kally</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section (Complete) -->
+        <section id="skills" class="py-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-12 flex items-center gap-4">
+                <span class="h-1 w-12 bg-blue-500 rounded-full"></span> 
+                Arsenal Technique <span class="text-sm text-gray-500 font-mono">// 20+ compétences</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Développement Web -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <i class="fab fa-html5 text-3xl text-orange-500 mb-3"></i>
+                    <h3 class="font-bold text-lg mb-3">Développement Web</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="badge-tech">HTML5/CSS3</span>
+                        <span class="badge-tech">JavaScript ES6+</span>
+                        <span class="badge-tech">PHP/MySQL</span>
+                        <span class="badge-tech">API REST</span>
+                        <span class="badge-tech">Tailwind/Bootstrap</span>
+                    </div>
+                    <p class="text-gray-400 text-xs">Site de gestion scolaire complet hébergé sur InfinityFree</p>
+                </div>
+
+                <!-- Programmation Système -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <i class="fas fa-cogs text-3xl text-green-500 mb-3"></i>
+                    <h3 class="font-bold text-lg mb-3">Programmation Système</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="badge-tech">C</span>
+                        <span class="badge-tech">C++</span>
+                        <span class="badge-tech">Haskell</span>
+                        <span class="badge-tech">SFML</span>
+                    </div>
+                    <p class="text-gray-400 text-xs">Jeu d'échecs en C++ · Fonctions pures en Haskell</p>
+                </div>
+
+                <!-- Mobile & Java -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <i class="fab fa-android text-3xl text-green-400 mb-3"></i>
+                    <h3 class="font-bold text-lg mb-3">Mobile & Java</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="badge-tech">Android Studio</span>
+                        <span class="badge-tech">Java</span>
+                        <span class="badge-tech">SQLite</span>
+                    </div>
+                    <p class="text-gray-400 text-xs">Application de gestion hôtelière (réservations, facturation)</p>
+                </div>
+
+                <!-- Réseaux & Sécurité -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <i class="fas fa-network-wired text-3xl text-cyan-400 mb-3"></i>
+                    <h3 class="font-bold text-lg mb-3">Réseaux & Sécurité</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="badge-tech">GNS3</span>
+                        <span class="badge-tech">RADIUS</span>
+                        <span class="badge-tech">DMZ/VLAN</span>
+                        <span class="badge-tech">RJ45/Câblage</span>
+                        <span class="badge-tech">Linux/Windows</span>
+                    </div>
+                    <p class="text-gray-400 text-xs">Configuration 3 routeurs · Serveur RADIUS · Partage de données</p>
+                </div>
+
+                <!-- Bureautique & Maintenance -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <i class="fas fa-print text-3xl text-purple-400 mb-3"></i>
+                    <h3 class="font-bold text-lg mb-3">Bureautique & Maintenance</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="badge-tech">Microsoft 365</span>
+                        <span class="badge-tech">KoboToolbox</span>
+                        <span class="badge-tech">Sage Sari</span>
+                        <span class="badge-tech">Imprimantes/Scanners</span>
+                    </div>
+                    <p class="text-gray-400 text-xs">Maintenance équipements · Plastifieuses · Diagnostic matériel</p>
+                </div>
+
+                <!-- Outils & DevOps -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <i class="fas fa-cloud-upload-alt text-3xl text-blue-400 mb-3"></i>
+                    <h3 class="font-bold text-lg mb-3">DevOps & Hébergement</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="badge-tech">Git/GitHub</span>
+                        <span class="badge-tech">InfinityFree</span>
+                        <span class="badge-tech">cPanel</span>
+                        <span class="badge-tech">Bash Scripting</span>
+                    </div>
+                    <p class="text-gray-400 text-xs">Déploiement continu · Automatisation · Gestion serveurs</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section (Complete with real projects) -->
+        <section id="projects" class="py-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-12 flex items-center gap-4">
+                <span class="h-1 w-12 bg-blue-500 rounded-full"></span> 
+                Projets Réalisés
+            </h2>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Projet 1: Gestion Scolaire -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-56 bg-gradient-to-br from-blue-900/40 to-indigo-900/40 flex items-center justify-center">
+                        <i class="fas fa-school text-7xl text-blue-400/70 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">📚 EduManage Pro — Gestion Établissement Scolaire</h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="badge-tech">HTML/CSS</span>
+                            <span class="badge-tech">PHP</span>
+                            <span class="badge-tech">MySQL</span>
+                            <span class="badge-tech">JavaScript</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Plateforme complète de gestion d'école secondaire : élèves, enseignants, notes, bulletins, emplois du temps. Hébergée sur InfinityFree avec authentification sécurisée.</p>
+                        <div class="mt-4 flex gap-3 text-sm">
+                            <span class="text-blue-400"><i class="fas fa-link"></i> Demo en ligne</span>
+                            <span class="text-gray-500"><i class="fab fa-github"></i> Repository privé</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projet 2: Application Hôtelière -->
+                <div class="glass-card rounded-2xl overflow-hidden">
+                    <div class="h-56 bg-gradient-to-br from-emerald-900/40 to-teal-900/40 flex items-center justify-center">
+                        <i class="fas fa-hotel text-7xl text-emerald-400/70"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">🏨 HôtelNexus — App Android (Java)</h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="badge-tech">Android Studio</span>
+                            <span class="badge-tech">Java</span>
+                            <span class="badge-tech">SQLite</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Application mobile de gestion hôtelière : réservations, gestion des chambres, facturation, statistiques. Interface Material Design moderne.</p>
+                        <div class="mt-2 text-xs text-gray-500"><i class="fas fa-star text-yellow-500"></i> Projet de semestre — Mention 18/20</div>
+                    </div>
+                </div>
+
+                <!-- Projet 3: Jeu C++ -->
+                <div class="glass-card rounded-2xl overflow-hidden">
+                    <div class="h-56 bg-gradient-to-br from-amber-900/40 to-orange-900/40 flex items-center justify-center">
+                        <i class="fas fa-chess-queen text-7xl text-amber-400/70"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">♞ ChessMaster — Moteur d'échecs C++</h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="badge-tech">C++17</span>
+                            <span class="badge-tech">SFML</span>
+                            <span class="badge-tech">POO</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Jeu complet avec interface graphique, IA avec algorithme minimax, validation des règles FIDE, sauvegarde des parties. 3000+ lignes de code.</p>
+                    </div>
+                </div>
+
+                <!-- Projet 4: Haskell & Réseaux -->
+                <div class="glass-card rounded-2xl overflow-hidden">
+                    <div class="h-56 bg-gradient-to-br from-purple-900/40 to-pink-900/40 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-7xl text-purple-400/70"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">⚡ DataFlow Haskell + Infrastructure Réseau</h3>
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <span class="badge-tech">Haskell</span>
+                            <span class="badge-tech">GNS3</span>
+                            <span class="badge-tech">RADIUS</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Fonctions pures pour analyse de données académiques + TP réseaux : configuration 3 routeurs, serveur RADIUS, DMZ, câblage RJ45.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Network Section (Détails TP Réseaux) -->
+        <section id="network" class="py-12" data-aos="fade-up">
+            <div class="glass-card rounded-3xl p-8">
+                <h2 class="text-3xl font-bold mb-6 flex items-center gap-4">
+                    <span class="h-1 w-12 bg-blue-500 rounded-full"></span>
+                    Infrastructure & Réseaux
+                </h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="p-4 bg-black/30 rounded-xl border border-blue-500/20">
+                        <i class="fas fa-plug text-2xl text-blue-400 mb-2"></i>
+                        <h3 class="font-bold">Câblage structuré</h3>
+                        <p class="text-xs text-gray-400 mt-1">Sertissage RJ45 (T568A/B), câbles droits/croisés, brassage, diagnostic pannes</p>
+                    </div>
+                    <div class="p-4 bg-black/30 rounded-xl border border-purple-500/20">
+                        <i class="fas fa-shield-alt text-2xl text-purple-400 mb-2"></i>
+                        <h3 class="font-bold">Sécurité avancée</h3>
+                        <p class="text-xs text-gray-400 mt-1">Serveur RADIUS (FreeRADIUS), DMZ sous GNS3, iptables, VLAN</p>
+                    </div>
+                    <div class="p-4 bg-black/30 rounded-xl border border-cyan-500/20">
+                        <i class="fas fa-diagram-project text-2xl text-cyan-400 mb-2"></i>
+                        <h3 class="font-bold">Topologie 3 routeurs</h3>
+                        <p class="text-xs text-gray-400 mt-1">OSPF/RIP, interconnexion, partage de données, configuration Linux/Windows</p>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 bg-blue-500/5 rounded-xl text-center">
+                    <p class="text-sm text-gray-400"><i class="fas fa-check-circle text-green-500 mr-2"></i> TP réalisés : Configuration serveur RADIUS · DMZ · Routage dynamique · Câblage certification</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Footer -->
+        <footer id="contact" class="mt-20 border-t border-white/10 pt-12 text-center text-gray-500 text-sm">
+            <div class="flex flex-wrap justify-center gap-8 mb-8">
+                <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-github text-xl"></i></a>
+                <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-linkedin text-xl"></i></a>
+                <a href="#" class="hover:text-blue-400 transition"><i class="fas fa-envelope text-xl"></i></a>
+                <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-whatsapp text-xl"></i></a>
+            </div>
+            <p class="mb-2">📧 hissein.kally@univ-ndere.cm | 📍 Ngaoundéré, Cameroun</p>
+            <p>© 2026 Hissein Kally — Étudiant en Informatique, Université de Ngaoundéré. Tous droits réservés.</p>
+            <p class="text-xs text-gray-600 mt-3 font-mono">Built with <i class="fas fa-heart text-red-500"></i> · Fullstack · Network Engineering · Innovation</p>
+        </footer>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true, offset: 50 });
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+            cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
+        });
+
+        document.querySelectorAll('a, button, .glass-card, .badge-tech').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform += ' scale(2.5)';
+                cursorDot.style.transform += ' scale(1.5)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = cursor.style.transform.replace(' scale(2.5)', '');
+                cursorDot.style.transform = cursorDot.style.transform.replace(' scale(1.5)', '');
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Skill bars animation on scroll
+        const observerOptions = { threshold: 0.3 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const progressBars = entry.target.querySelectorAll('.skill-progress');
+                    progressBars.forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        if(width) bar.style.width = width;
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.skill-bar').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
